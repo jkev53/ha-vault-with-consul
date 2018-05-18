@@ -45,7 +45,7 @@
     - name: consul container is running
       docker_container:
         name: consul
-        image: consul:0.8.1
+        image: consul:1.1.0
         restart_policy: always
         state: started
         hostname: "consul{{ item.name }}"
@@ -69,7 +69,7 @@
     - name: "vault container is running"
       docker_container:
         name: vault
-        image: sjourdan/vault:0.7.0
+        image: jkev53/vault:latest
         restart_policy: always
         state: started
         hostname: "{{ item }}"
