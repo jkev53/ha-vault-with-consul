@@ -21,7 +21,7 @@ Let's go!
 ### Clone repository
 
 ```bash
-git clone https://github.com/consort-it/ha-vault-with-consul.git
+git clone https://github.com/jkev53/ha-vault-with-consul.git
 ```
 
 ### Start Vault cluster
