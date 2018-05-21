@@ -1,0 +1,2 @@
+vault_version: 0.10.1
+vault_addr: http://10.10.10.11:8200

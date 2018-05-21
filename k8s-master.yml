@@ -1,0 +1,19 @@
+- name: k8s-master
+  hosts: localhost
+  remote_user: vagrant
+  serial: 1
+  sudo: yes
+
+  roles:
+    - vault-ssh-helper
+
+  tasks:
+    - name: install jq with apt
+      apt:
+        name: jq
+        force: yes
+    - name: vault-ssh-helper config directory is present
+      file: path=/opt/vault-ssh-helper/config state=directory owner=100 group=1000 mode=0750
+
+    - name: vault-ssh-helper config is present
+      template: src=resources/vault-ssh-helper/config.hcl dest=/opt/vault-ssh-helper/config/config.hcl owner=100 group=1000 mode=0640

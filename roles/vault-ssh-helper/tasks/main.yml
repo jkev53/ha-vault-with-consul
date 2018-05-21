@@ -1,0 +1,14 @@
+
+- name: Install unzip
+  package:
+    name: unzip
+    update_cache: yes
+  become: true
+
+- name: download and install vault binary
+  unarchive:
+    src: "https://releases.hashicorp.com/vault-ssh-helper/{{ vault_ssh_helper_version }}/vault-ssh-helper_{{ vault_ssh_helper_version }}_linux_amd64.zip"
+    dest: /usr/local/bin/
+    remote_src: True
+    creates: /usr/local/bin/vault-ssh-helper
+  become: true

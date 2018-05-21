@@ -1,0 +1,17 @@
+- name: Install unzip
+  package:
+    name: unzip
+    update_cache: yes
+  become: true
+
+- name: download and install vault binary
+  unarchive:
+    src: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip"
+    dest: /usr/local/bin/
+    remote_src: True
+    creates: /usr/local/bin/vault
+  become: true
+
+- name: Adding the path in the bashrc files
+  lineinfile: dest=/home/vagrant/.bashrc line='export VAULT_ADDR="{{ vault_addr }}"' insertafter='EOF' regexp='export VAULT_ADDR="{{ vault_addr }}"' state=present
+

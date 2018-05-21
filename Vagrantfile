@@ -30,6 +30,20 @@ Vagrant.configure(2) do |config|
     box.vm.provision :shell, inline: "cd /vagrant && PYTHONUNBUFFERED=1 ansible-playbook vault.yml -c local"
   end
 
+  config.vm.define "k8s-master" do |box|
+    box.vm.hostname = "k8s-master"
+    box.vm.network "private_network", ip: "10.10.10.14"
+    box.vm.provision :shell, path: "resources/scripts/bootstrap_ansible.sh"
+    box.vm.provision :shell, inline: "cd /vagrant && PYTHONUNBUFFERED=1 ansible-playbook k8s-master.yml -c local"
+end
+
+  config.vm.define "operator" do |box|
+    box.vm.hostname = "operator"
+    box.vm.network "private_network", ip: "10.10.10.15"
+    box.vm.provision :shell, path: "resources/scripts/bootstrap_ansible.sh"
+    box.vm.provision :shell, inline: "cd /vagrant && PYTHONUNBUFFERED=1 ansible-playbook operator.yml -c local"  
+  end
+
   config.vm.provision :vai do |ansible|
     ansible.inventory_dir = './'
     ansible.inventory_filename = 'hosts'
