@@ -12,6 +12,9 @@ Vagrant.configure(2) do |config|
   config.vm.define "vault01" do |box|
     box.vm.hostname = "vault01"
     box.vm.network "private_network", ip: "10.10.10.11"
+    box.vm.network "forwarded_port", guest: 9000, host: 9000
+    box.vm.network "forwarded_port", guest: 9200, host: 9200
+    box.vm.network "forwarded_port", guest: 9500, host: 9500
     box.vm.provision :shell, path: "resources/scripts/bootstrap_ansible.sh"
     box.vm.provision :shell, inline: "cd /vagrant && PYTHONUNBUFFERED=1 ansible-playbook vault.yml -c local"
   end
