@@ -1,0 +1,37 @@
+- name: ha-vault
+  hosts: localhost
+  remote_user: vagrant
+  serial: 1
+  sudo: yes
+
+  vars:
+    consul01_int_ip: 10.10.10.11
+    consul02_int_ip: 10.10.10.12
+    consul03_int_ip: 10.10.10.13
+
+  roles:
+    - docker
+    - docker-compose
+
+  tasks:
+    - name: initialize the vault
+      shell: "curl -X PUT -d '{\"secret_shares\":1, \"secret_threshold\":1}' http://10.10.10.11:8200/v1/sys/init"
+      register: result
+
+    - local_action: copy content={{ result }} dest=/home/vagrant/vault_init
+    
+    - debug: var=result
+
+    - name: Get the unseal Key
+      set_fact: 
+        unseal_key: "{{ (result.stdout|from_json).keys_base64[0] }}"
+
+    - name: Get the root Token
+      set_fact:
+          vault_root_token: "{{ (result.stdout|from_json).root_token }}"
+
+    - name: unseal the vault
+      shell: "unset http_proxy && curl -X PUT -d '{\"key\":\"{{ unseal_key }}\"}' http://10.10.10.11:8200/v1/sys/unseal"
+      register: result
+
+    - debug: var=result

@@ -1,14 +1,12 @@
-- name: vault-operator
+- name: frontend
   hosts: localhost
   remote_user: vagrant
   serial: 1
   sudo: yes
-
-  roles:
-    - vault-operator
 
   tasks:
     - name: install jq with apt
       apt:
         name: jq
         force: yes
+

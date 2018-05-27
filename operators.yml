@@ -1,0 +1,50 @@
+- name: operators
+  hosts: localhost
+  remote_user: vagrant
+  serial: 1
+  sudo: yes
+
+  roles:
+    - vault
+
+  tasks:
+    # - name: install jq with apt
+    #   apt:
+    #     name: jq
+    #     force: yes
+
+    # - name: Set authorized key, removing all the authorized key already set
+    #   authorized_key:
+    #     user: root
+    #     key: '{{ item }}'
+    #     state: present
+    #     exclusive: True
+    #   with_file:
+    #     - resources/ssh/authorized_keys.myuser.pub
+
+    - name: Set ForwardAgent yes in file /etc/ssh/ssh_config
+      lineinfile: 
+        path: '/etc/ssh/ssh_config'
+        regexp: '#   ForwardAgent no'
+        line: '   ForwardAgent yes'
+        state: present
+
+    - name: Add the user 'jkevlin' with a specific uid
+      user:
+        name: jkevlin
+        comment: John Kevlin
+        uid: 1040
+        state: present
+        shell: /bin/bash
+        createhome: yes
+
+    - name: Placing jkevlin key
+      authorized_key: 
+        user: jkevlin 
+        state: present
+        key: "{{ lookup('file', './jkevlin.pub') }}"
+    
+    - name: Restart SSH
+      shell: sleep 3; /etc/init.d/sshd restart
+      async: 1
+      poll: 0
